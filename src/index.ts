@@ -9,7 +9,7 @@ export interface IMailParams {
   onEnd?: (success: number, failed: number) => Promise<any> | any;
 }
 
-export async function mailUsers(ctx: Context & any, users: number[], params: IMailParams) {
+export async function mailUsers<T extends Context>(ctx: T, users: number[], params: IMailParams) {
   if (!params.text && !params.messageSender)
     throw new Error('You must have a way to send a message to the user');
 

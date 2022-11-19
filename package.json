@@ -1,22 +1,30 @@
 {
   "name": "grammy-mail",
   "description": "Send your mails to users in the grammY framework",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "1.0.1",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Degreet <degreetpro@gmail.com>",
   "license": "MIT",
+  "homepage": "https://github.com/Degreet/grammy-mail#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Degreet/grammy-mail"
+  },
   "keywords": [
     "grammy",
     "mail",
     "broadcast"
   ],
   "exports": {
-    ".": "./index.js"
+    ".": "./dist/index.js"
   },
   "scripts": {
-    "prepare": "tsc"
+    "prepare": "rm -rf dist && tsc"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "devDependencies": {
     "@types/chunk": "^0.0.0",
     "@types/node": "^18.11.9",
