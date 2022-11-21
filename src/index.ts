@@ -55,7 +55,7 @@ export async function mailUsers<T extends Context>(ctx: T, users: number[], para
 
     return new Promise((resolve) => {
       setTimeout(async () => {
-        resolve(await step());
+        resolve(step());
       }, Math.max(0, startedAt + 1000 - Date.now()));
     });
   }
