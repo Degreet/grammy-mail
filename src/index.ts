@@ -5,6 +5,7 @@ export interface IMailParams {
   text?: string;
   other?: any;
   messageSender?: (userId: number) => Promise<any> | any;
+  filter?: (userId: number) => Promise<boolean> | boolean;
   onSend?: (userId: number, isSuccess: boolean) => Promise<any> | any;
   onEnd?: (success: number, failed: number) => Promise<any> | any;
 }
@@ -32,6 +33,14 @@ export async function mailUsers<T extends Context>(ctx: T, users: number[], para
 
     await Promise.all(
       part.map(async (userId: number) => {
+        if (!!params.filter) {
+          try {
+            if (!(await params.filter(userId))) return;
+          } catch {
+            if (!params.filter(userId)) return;
+          }
+        }
+
         let isSuccess = true;
 
         if (params.messageSender) {
