@@ -44,9 +44,11 @@ export async function mailUsers<T extends Context>(ctx: T, users: number[], para
         let isSuccess = true;
 
         if (params.messageSender) {
-          await params.messageSender(userId).catch(() => {});
+          await params.messageSender(userId).catch(() => (isSuccess = false));
         } else if (params.text) {
-          await ctx.api.sendMessage(userId, params.text, params.other);
+          await ctx.api
+            .sendMessage(userId, params.text, params.other)
+            .catch(() => (isSuccess = false));
         }
 
         if (isSuccess) success++;
