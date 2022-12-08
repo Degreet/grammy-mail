@@ -2,12 +2,12 @@ import { Message } from '@grammyjs/types/message';
 import { Context } from 'grammy';
 import chunk from 'chunk';
 
-export interface IMailParams {
+export interface IMailParams<T = any> {
   text?: string;
   other?: any;
-  messageSender?: (userId: number) => Promise<any> | any;
+  messageSender?: (userId: number) => Promise<T> | T;
   filter?: (userId: number) => Promise<boolean> | boolean;
-  onSend?: (userId: number, isSuccess: boolean, messageId?: number) => Promise<any> | any;
+  onSend?: (userId: number, isSuccess: boolean, arg?: T) => Promise<any> | any;
   onEnd?: (success: number, failed: number) => Promise<any> | any;
 }
 
@@ -43,12 +43,12 @@ export async function mailUsers<T extends Context>(ctx: T, users: number[], para
         }
 
         let isSuccess = true,
-          msgId;
+          arg: any;
 
         if (params.messageSender) {
-          msgId = await params.messageSender(userId).catch(() => (isSuccess = false));
+          arg = await params.messageSender(userId).catch(() => (isSuccess = false));
         } else if (params.text) {
-          msgId = (
+          arg = (
             (await ctx.api
               .sendMessage(userId, params.text, params.other)
               .catch(() => (isSuccess = false))) as Message.TextMessage
@@ -60,9 +60,9 @@ export async function mailUsers<T extends Context>(ctx: T, users: number[], para
 
         if (params.onSend) {
           try {
-            await params.onSend(userId, isSuccess, msgId);
+            await params.onSend(userId, isSuccess, arg);
           } catch {
-            params.onSend(userId, isSuccess, msgId);
+            params.onSend(userId, isSuccess, arg);
           }
         }
       }),
